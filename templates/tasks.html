@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Tasks
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+
+        <div class="tasks">
+
+            <div class="nothing" style="display: {{ display }};">
+
+                <h3>Add some tasks</h3>
+                <p>you didn't have any tasks yet, add some by pressing add button below
+                <br>
+                or you can pic up  somthing new from Random tab
+                </p>
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+
+
+            {% for i in range(day_lenth): %}
+            <div class="day">
+                <span class="date">{{ newDays[i] }}</span>
+                <div class="list">
+                    <ul>
+                        {% for task in tasks.get(days[i]): %}
+                        <li>
+                            <form action="/tasks" method="post">
+                                <label class="container-checkbox">
+
+                                    {% if task.get("Checked") == 0 %}
+                                    <input onchange="this.form.submit()" class="cbox" type="checkbox" name="task_cbox" value="{{ task.get("task") }}">
+                                    {% else %}
+                                    <input onchange="this.form.submit()" class="cbox" type="checkbox" name="task_cbox" value="{{ task.get("task") }}" checked="checked">
+                                    {% endif %}
+
+                                    <label class="cbox_label">{{ task.get("task") }}</label>
+                                    <span class="checkmark"></span>
+                                </label>
+                                <span class="btns">
+                                    <input type="hidden" name="task_id" value="{{ task.get("id") }}">
+                                    <button type="submit" name="task_btn" value="edit_show" class="options_btns"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                    <button type="submit" name="task_btn" value="delete" class="options_btns"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </span>
+                            </form>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+    <div class="add_floating_btn">
+        <a href="#add" class="add_btn"><i class="fa fa-plus" aria-hidden="true"></i></a>
+    </div>
+
+    <div id="add" class="overlay">
+        <div class="add_page">
+            <h2>Add Task</h2>
+		    <a class="close" href="">&times;</a>
+		    <div class="content">
+		        <form action="/tasks" method="post">
+		            <h3>task</h3>
+			        <input type="text" name="task" value="">
+			        <h3>choose Date</h3>
+			        <input id="datePicker" type="date" name="date" value="2022-01-01">
+
+			        <input type="submit" name="task_btn" value="add" class="add_submit"/>
+		        </form>
+		    </div>
+        </div>
+    </div>
+
+
+    <div id="edit" class="overlay_edit" style="visibility: {{ request.args.get('visibility') }}; opacity: {{ request.args.get('opacity') }}">
+        <div class="edit_page">
+            <h2>Edit Task</h2>
+		    <a class="close" href="/tasks">&times;</a>
+		    <div class="content">
+		        <form action="/tasks" method="post">
+		            <h3>task</h3>
+			        <input type="text" name="task" value="{{ request.args.get('name') }}">
+			        <input type="hidden" name="task_id" value="{{ request.args.get('task_id') }}">
+			        <h3>choose Date</h3>
+			        <input id="datePicker" type="date" name="date" value="{{ request.args.get('date') }}">
+			        <input type="submit" name="task_btn" value="edit" class="add_submit"/>
+		        </form>
+		    </div>
+        </div>
+    </div>
+
+{% endblock %}

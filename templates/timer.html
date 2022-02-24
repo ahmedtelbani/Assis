@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <!-- Custom Style Sheet -->
+        <link href="/static/styles.css" rel="stylesheet">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <style>
+            p.time {
+                font-size: 40px;
+                color: #333;
+                font-weight: 900;
+                margin: 0 auto;
+                text-align: center;
+            }
+        </style>
+
+        <!-- pomodoro counter -->
+        <script>
+            var counter;
+            var speed;
+            var timer;
+
+            function startTimer(duration) {
+                var form = document.getElementById("form");
+                var display = document.querySelector('#time');
+                timer = duration;
+                var minutes, seconds;
+
+                counter = setInterval(function () {
+
+                    timer -= 1;
+
+                    if(timer <= 0) {
+                        clearInterval(counter);
+                        display.textContent = "00:00";
+
+                        setTimeout(function(){
+                            if(this != top){
+                                top.location.href = window.parent.location.href;
+                            }
+                        }, 500);
+                        form.submit();
+                        console.log("end")
+                    }
+
+                    minutes = parseInt(timer / 60, 10);
+                    seconds = parseInt(timer % 60, 10);
+
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    display.textContent = minutes + ":" + seconds;
+
+                }, speed);
+
+            }
+            // options functions
+            function pauseTimer() {
+                clearInterval(counter);
+            }
+            function playTimer() {
+                pauseTimer();
+                speed = 1000;
+                startTimer(timer);
+            }
+            function speedTimer() {
+                pauseTimer();
+                speed = 100;
+                startTimer(timer);
+            }
+        </script>
+
+    </head>
+    <body>
+        {% if function == "new_pomo": %}
+        <p class="time" id="time">25:00</p>
+        <p class="static_p">Minutes Left</p>
+
+        <form id="form" action="/pomodoro" method="post">
+            <input type="hidden" name="pomo_act" value="pomo">
+        </form>
+
+        <div class="play_btns">
+            <button id="pause" onclick="pauseTimer()"><i class="fa fa-pause" aria-hidden="true"></i></button>
+            <button id="play" onclick="playTimer()"><i class="fa fa-play" aria-hidden="true"></i></button>
+            <button id="speed" onclick="speedTimer()"><i class="fa fa-bolt" aria-hidden="true"></i></button>
+        </div>
+
+        <script>
+            window.onload = function () {
+                speed = 1000;
+                var timer_25 = (60 * 25);
+                startTimer(timer_25);
+            };
+        </script>
+
+        {% elif function == 'new_rest': %}
+        <p class="time" id="time">05:00</p>
+        <p class="static_p">Minutes Left</p>
+
+        <form id="form" action="/pomodoro" method="post">
+            <input type="hidden" name="pomo_act" value="rest">
+        </form>
+        <div class="play_btns">
+            <button id="pause" onclick="pauseTimer()"><i class="fa fa-pause" aria-hidden="true"></i></button>
+            <button id="play" onclick="playTimer()"><i class="fa fa-play" aria-hidden="true"></i></button>
+            <button id="speed" onclick="speedTimer()"><i class="fa fa-bolt" aria-hidden="true"></i></button>
+        </div>
+
+        <script>
+            window.onload = function () {
+                speed = 1000;
+                var timer_5 = (60 * 5);
+                startTimer(timer_5);
+            };
+        </script>
+
+        {% elif function == "new_reset": %}
+        <p class="time" id="time">00:00</p>
+        <p class="static_p">Minutes Left</p>
+        <div class="play_btns">
+            <button id="pause"><i class="fa fa-pause" aria-hidden="true"></i></button>
+            <button id="play"><i class="fa fa-play" aria-hidden="true"></i></button>
+            <button id="speed"><i class="fa fa-bolt" aria-hidden="true"></i></button>
+        </div>
+
+        {% else %}
+        <p class="time" id="time">00:00</p>
+        <p class="static_p">Minutes Left</p>
+        <div class="play_btns">
+            <button id="pause" ><i class="fa fa-pause" aria-hidden="true"></i></button>
+            <button id="play" ><i class="fa fa-play" aria-hidden="true"></i></button>
+            <button id="speed"><i class="fa fa-bolt" aria-hidden="true"></i></button>
+        </div>
+        {% endif %}
+
+
+
+    </body>
+</html>

@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Pomodoro
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="pomodoro_app">
+
+            <div class="scores">
+                <span class="namber">
+                    <p class="score_title">Pomodoros Number</p>
+                    <p class="score_content">{{ pomo_number }}</p>
+                </span>
+                <span class="today_number">
+                    <p class="score_title">Breaks Number</p>
+                    <p class="score_content">{{ breaks_number }}</p>
+                </span>
+                <span class="time">
+                    <p class="score_title">Pomodoros Time</p>
+                    <p class="score_content">{{ pomo_time }}</p>
+                </span>
+                <span class="today_time">
+                    <p class="score_title">Breaks Time</p>
+                    <p class="score_content">{{ breaks_time }}</p>
+                </span>
+            </div>
+
+            <div class="pomodoro_widget">
+
+
+                <div class="new_pomo">
+                    <a target="timer" href="/timer?function=new_pomo">New Pomodoro</a>
+                    <a target="timer" href="/timer?function=new_rest">Take a Rest</a>
+                </div>
+
+                <div class="minutes_left">
+                    <iframe name="timer" src="/timer" frameborder="0"></iframe>
+                </div>
+
+                <div class="reset">
+                        <a target="timer" href="/timer?function=new_reset">Reset</a>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}

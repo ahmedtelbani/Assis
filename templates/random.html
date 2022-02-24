@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Random
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <h1>Random</h1>
+        <P>You can make incredible things, by doing something new.</P>
+
+        <form action="" method="post">
+            <input class="random-btn" type="submit" value="Discover a new thing">
+        </form>
+
+        <h2 class="random_activity">{{ activity }}</h2>
+
+        <!-- table -->
+        <div style="visibility: {{ visibility }};" class="random_table">
+            <div class="col-5">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Type</th>
+                        <th style="font-weight: normal;">{{ r_type }}</th>
+                    </tr>
+                    <tr>
+                        <td><b>Participants</b></td>
+                        <td>{{ participants }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Price</b></td>
+                        <td>{{ price }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Link</b></td>
+                        <td>{{ link }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Accessibility</b></td>
+                        <td>{{ accessibility }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

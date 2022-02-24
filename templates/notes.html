@@ -1,0 +1,152 @@
+ {% extends "layout.html" %}
+
+{% block title %}
+    Notes
+{% endblock %}
+
+{% block style %}
+    <style>
+      .navbar {
+        width: 100%;
+        position: fixed;
+        z-index: 5;
+      }
+      .sidebar{
+        margin-top: 76px;
+      }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div id="side_bar" class="sidebar">
+        <a class="nav_link active" data="#all">All Notes</a>
+
+        {% for label in labels: %}
+        <a class="nav_link" data="#{{ label }}">{{ label }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="content">
+        <div class="notes" id="notes_panel">
+
+            <ul id="notes_list">
+
+              {% for note in notes: %}
+                <li class="#{{ note['label'] }}" style="display: none;">
+
+                  <a id="focus" onfocus="in_focus(this)" onblur="out_focus(this)" href="#{{ note['id'] }}">
+                    <form action="/notes" method="POST">
+                      <input type="hidden" name="note_id" value="{{ note['id'] }}">
+                      <h2>{{ note["title"] }}</h2>
+                      <p>{{ note["content"] }}</p>
+                      <h3 class="label">{{ note["label"] }}</h3>
+                      <button contenteditable="false" class="notes_btn" name="notes_btn" value="save">save</button>
+                      <button contenteditable="false" class="notes_btn" name="notes_btn" value="delete">delete</button>
+                    </form>
+                  </a>
+                </li>
+                {% endfor %}
+
+              </ul>
+
+        </div>
+
+        <script>
+        function in_focus(note) {
+          console.log("focus");
+              note.setAttribute("contenteditable", true);
+
+              var class_name='notes_btn';
+              elements = note.getElementsByClassName(class_name);
+
+              for (var i=0; i < elements.length; i++) {
+                  elements[i].style.display = "block";
+              }
+
+          }
+
+          function out_focus(note){
+
+            var class_name='notes_btn';
+            elements = note.getElementsByClassName(class_name);
+
+            for (var i=0; i < elements.length; i++) {
+              elements[i].style.display = "none";
+            }
+          }
+
+        </script>
+
+
+
+        <script>
+          // Add active class to the current link (highlight it)
+          var side_bar = document.getElementById("side_bar");
+          var btns = side_bar.getElementsByTagName("a");
+
+          for (var i = 0; i < btns.length; i++) {
+
+            btns[i].addEventListener("click", function() {
+              var current = document.getElementsByClassName("active");
+              current[0].className = current[0].className.replace(" active", "");
+              this.className += " active";
+            });
+
+          }
+        </script>
+
+        <script>
+
+          window.onload = function(){
+            var side_bar = document.getElementById("side_bar");
+            var btns = side_bar.getElementsByTagName("a");
+
+            var current = document.getElementsByClassName("active");
+            var link = current[0].getAttribute("data");
+
+            if(link == "#all"){
+              notes_list = document.getElementById("notes_list").children;
+            }
+
+            for (var i = 0; i < btns.length; i++) {
+              btns[i].addEventListener("click", function() {
+                current = document.getElementsByClassName("active");
+                link = current[0].getAttribute("data");
+
+                var notes_list = document.getElementById("notes_list").querySelectorAll(`[class="${link}"]`);
+
+                if(link == "#all"){
+                  notes_list = document.getElementById("notes_list").children;
+                } else if(link == "#New"){
+                  notes_list = document.getElementById("notes_list").querySelectorAll(`[class="#"]`);
+                }
+
+                 var all = document.getElementById("notes_list").children;
+
+                 for(var j = 0; j < all.length; j++){
+                   all[j].style.display = "none";
+                 }
+
+                  for(var k =0; k < notes_list.length; k++){
+                    notes_list[k].style.display = "block";
+                  }
+
+              });
+            }
+            for(var i =0; i < notes_list.length; i++){
+              notes_list[i].style.display = "block";
+            }
+
+          }
+
+        </script>
+
+        <form action="/notes" method="POST">
+          <button name="notes_btn" value="add" class="float">
+              <i class="fa fa-plus my-float"></i>
+          </button>
+        </form>
+
+    </div>
+
+{% endblock %}
